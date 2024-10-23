@@ -1,12 +1,10 @@
 package dev.terminalmc.effecttimerplus.gui.screen;
 
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.network.chat.CommonComponents;
 
 import static dev.terminalmc.effecttimerplus.util.Localization.localized;
@@ -26,12 +24,14 @@ public class ConfigScreenProvider {
         }
     }
 
-    static class BackupScreen extends OptionsSubScreen {
+    static class BackupScreen extends Screen {
+        private final Screen parent;
         private final String modKey;
         private final String modUrl;
 
         public BackupScreen(Screen parent, String modKey, String modUrl) {
-            super(parent, Minecraft.getInstance().options, localized("name"));
+            super(localized("name"));
+            this.parent = parent;
             this.modKey = modKey;
             this.modUrl = modUrl;
         }
@@ -50,7 +50,7 @@ public class ConfigScreenProvider {
                             (button) -> minecraft.setScreen(new ConfirmLinkScreen(
                                     (open) -> {
                                         if (open) Util.getPlatform().openUri(modUrl);
-                                        minecraft.setScreen(lastScreen);
+                                        minecraft.setScreen(parent);
                                     }, modUrl, true)))
                     .pos(width / 2 - 120, height / 2)
                     .size(115, 20)
@@ -64,8 +64,5 @@ public class ConfigScreenProvider {
                     .build();
             addRenderableWidget(exitButton);
         }
-
-        @Override
-        protected void addOptions() {}
     }
 }

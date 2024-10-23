@@ -1,2 +1,1 @@
-- Update icon
-- Fix config on recent NeoForge versions
+- Update to mc1.21.2
